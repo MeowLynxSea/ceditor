@@ -143,6 +143,18 @@ public:
         }
         return result;
     }
+
+    int size() const {
+        return parts.size();
+    }
+
+    int length() const {
+        int result = 0;
+        for (const auto& part : parts) {
+            result += part.text.length();
+        }
+        return result;
+    }
 };
 
 
