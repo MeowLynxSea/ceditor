@@ -55,18 +55,11 @@ public:
             }
         }
         //绘制文本到缓冲区，保证不超出边框
-        int textWidth = 0, i = 0;
-        while(textWidth <= width - 2 && left + textWidth + 2 < csbi.dwSize.X && i < text.size()) {
-            auto part = text.getParts()[i];
-            SetConsoleCursorPosition(hConsole, {static_cast<short>(left + textWidth), static_cast<short>(top)});
+        RichText drawTarget = text.substr(0, std::min(width - 2, csbi.dwSize.X - left - 2));
+        SetConsoleCursorPosition(hConsole, {static_cast<short>(left), static_cast<short>(top)});
+        for(auto part : drawTarget.getParts()) {
             SetConsoleTextAttribute(hConsole, BackgroundColorToWinColor(getBackColor(part.color)) | FrontColorToWinColor(getFrontColor(part.color)));
-            if(left + textWidth + part.text.length() + 2 < csbi.dwSize.X && textWidth + part.text.length() <= width - 2) {
-                printf("%s", part.text.c_str());
-            } else {
-                printf("%s", part.text.substr(0, std::min(csbi.dwSize.X - left - textWidth - 2, width - 2 - textWidth)).c_str());
-            }
-            textWidth += part.text.length();
-            i++;
+            printf("%s", part.text.c_str());
         }
 
         SetConsoleTextAttribute(hConsole, BackgroundColorToWinColor(COLOR_BLACK) | FrontColorToWinColor(COLOR_WHITE));

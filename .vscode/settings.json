@@ -51,7 +51,8 @@
         "text_encoding": "cpp",
         "typeinfo": "cpp",
         "variant": "cpp",
-        "cassert": "cpp"
+        "cassert": "cpp",
+        "cstdarg": "cpp"
     },
     "Codegeex.RepoIndex": true
 }

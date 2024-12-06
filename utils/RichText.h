@@ -43,6 +43,18 @@ public:
     RichText() {
         parts.push_back({""});
     }
+    // 构造函数，初始化为一段指定文本和颜色的文本
+    RichText(const std::string& text, const MColor& color) {
+        parts.push_back({text, color});
+    }
+    // 构造函数，初始化为一段指定文本的文本
+    RichText(const std::string& text) {
+        parts.push_back({text});
+    }
+    // 构造函数，初始化为一段指定文本和颜色的文本
+    RichText(const StringPart& part) {
+        parts.push_back(part);
+    }
 
     // 重载运算符=
     RichText& operator=(const RichText& other) {
