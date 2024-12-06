@@ -16,5 +16,6 @@ int main() {
     textLine2.draw();
 
     printf("\n");
+    getchar();
     return 0;
 }

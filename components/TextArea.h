@@ -88,7 +88,7 @@ public:
         for(int i = 0; i < height && top + i < csbi.dwSize.Y; i++) {
             for(int j = 0; j < width && left + j < csbi.dwSize.X; j++) {
                 SetConsoleCursorPosition(hConsole, {static_cast<short>(left + j), static_cast<short>(top + i)});
-                printf(" ");
+                putchar(' ');
             }
         }
         //绘制边框到缓冲区
