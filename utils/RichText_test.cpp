@@ -50,6 +50,10 @@ int main() {
     std::string plain = rt2.plainText();
     assert(plain == "HelloWorldWorldWorld");
 
+    RichText rt9 = RichText("    With some spaces before and after    ");
+    RichText rt10 = rt9.substr(5, 20);
+    assert(rt10.plainText() == "ith some spaces befo");
+
     printf("All tests passed.\n");
     return 0;
 }

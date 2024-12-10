@@ -14,7 +14,8 @@ BACKGROUND_GREEN	背景色包含绿色。
 BACKGROUND_RED	背景色包含红色。
 BACKGROUND_INTENSITY	背景色增强。
 */
-enum {
+
+enum Colors {
     COLOR_BLACK = 0,
     COLOR_BLUE = 1,
     COLOR_GREEN = 2,

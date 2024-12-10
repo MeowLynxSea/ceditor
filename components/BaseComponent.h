@@ -9,19 +9,46 @@ public:
     BaseComponent(int top, int left, int width, int height) : top(top), left(left), width(width), height(height) {};
     virtual ~BaseComponent() {};
 
-    void setTop(int top);
-    void setLeft(int left);
-    void setWidth(int width);
-    void setHeight(int height);
+    void setTop(int top) {
+        this->top = top;
+    }
+    void setLeft(int left) {
+        this->left = left;
+    }
+    void setWidth(int width) {
+        this->width = width;
+    }
+    void setHeight(int height) {
+        this->height = height;
+    }
 
-    int getTop();
-    int getLeft();
-    int getWidth();
-    int getHeight();
+    int getTop() {
+        return top;
+    }
+    int getLeft() {
+        return left;
+    }
+    int getWidth() {
+        return width;
+    }
+    int getHeight() {
+        return height;
+    }
 
-    void setPosition(int top, int left);
-    void setSize(int width, int height);
-    void setBounds(int top, int left, int width, int height);
+    void setPosition(int top, int left) {
+        this->top = top;
+        this->left = left;
+    }
+    void setSize(int width, int height) {
+        this->width = width;
+        this->height = height;
+    }
+    void setBounds(int top, int left, int width, int height) {
+        this->top = top;
+        this->left = left;
+        this->width = width;
+        this->height = height;
+    }
 
     virtual void draw() = 0;
     virtual void onKeyPress(int key) = 0;

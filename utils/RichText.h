@@ -124,7 +124,7 @@ public:
         int t_length = length;
         while(t_length > 0 && i < parts.size()) {
             if(t_start > 0) {
-                result += StringPart(parts[i].text.substr(t_start), parts[i].color);
+                result += StringPart(parts[i].text.substr(t_start, std::min(static_cast<size_t>(t_length), parts[i].text.length() - t_start)), parts[i].color);
                 t_length -= parts[i].text.length() - t_start;
                 t_start = 0;
             } else {

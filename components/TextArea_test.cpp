@@ -12,7 +12,7 @@ int main() {
     richText += " And more more more more more text.\n";
     richText += StringPart("And more more more more more more text.", COLOR_BLUE);
     richText += " And more more more more more more more text.\n";
-    richText += StringPart("And more more more more more more more more text.\n", COLOR_YELLOW);
+    richText += StringPart("    With some spaces before And more more more more more more more more text.\n", COLOR_YELLOW);
     richText += "And more more more more more more more more more text.\n";
     richText += StringPart("And more more more more more more more more more more text.\n", COLOR_CYAN);
 
