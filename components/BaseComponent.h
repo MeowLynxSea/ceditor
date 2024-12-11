@@ -4,6 +4,7 @@
 class BaseComponent {
 protected:
     int top, left, width, height;
+    bool focused;
 
 public:
     BaseComponent(int top, int left, int width, int height) : top(top), left(left), width(width), height(height) {};
@@ -33,6 +34,10 @@ public:
     }
     int getHeight() {
         return height;
+    }
+
+    void setFocused(bool focused) {
+        this->focused = focused;
     }
 
     void setPosition(int top, int left) {

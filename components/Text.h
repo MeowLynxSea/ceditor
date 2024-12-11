@@ -3,7 +3,7 @@
 
 #include "BaseComponent.h"
 #include <windows.h>
-#include <vector>
+#include "../mystl/my_vector.h"
 #include <conio.h>
 #include "../utils/RichText.h"
 
@@ -11,7 +11,7 @@ class Text : public BaseComponent {
 private:
     RichText text_;
     int viewLeft_ = 0, viewTop_ = 0;
-    std::vector<RichText> lines_;
+    MyVector<RichText> lines_;
     int maxLineWidth_ = 0;
 
 public:

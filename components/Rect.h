@@ -9,6 +9,7 @@
 
 class Rect : public BaseComponent {
 private:
+    RichText title_;
     MColor color_ = COLOR_WHITE;
 
 public:
@@ -38,18 +39,32 @@ public:
                 putchar('|');
             }
         }
-        for(int i = 0; i < width && left + i < csbi.dwSize.X; i++) {
-            if(top >= 0) {
+        if(top >= 0) {
+            for(int i = 0; i < width && left + i < csbi.dwSize.X; i++) {
+                if(i > 1 && i < strlen(title_.plainText().c_str()) + 2) continue;
                 SetConsoleCursorPosition(hConsole, {static_cast<short>(left + i - 1), static_cast<short>(top - 1)});
                 putchar('-');
             }
-            if(top + height - 1 < csbi.dwSize.Y) {
+        }
+        if(top + height - 1 < csbi.dwSize.Y) {
+            for(int i = 0; i < width && left + i < csbi.dwSize.X; i++) {
                 SetConsoleCursorPosition(hConsole, {static_cast<short>(left + i - 1), static_cast<short>(top + height - 2)});
                 putchar('-');
             }
         }
 
+        //绘制标题
+        SetConsoleCursorPosition(hConsole, {static_cast<short>(left + 1), static_cast<short>(top - 1)});
+        for(auto part : title_.getParts()) {
+            SetConsoleTextAttribute(hConsole, BackgroundColorToWinColor(getBackColor(part.color)) | FrontColorToWinColor(getFrontColor(part.color)));
+            printf("%s", part.text.c_str());
+        }
+
         SetConsoleTextAttribute(hConsole, BackgroundColorToWinColor(COLOR_BLACK) | FrontColorToWinColor(COLOR_WHITE));
+    }
+
+    void setTitle(const RichText title) {
+        title_ = title;
     }
 
     void onKeyPress(int key) override {

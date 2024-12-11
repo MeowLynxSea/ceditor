@@ -18,27 +18,28 @@ int main() {
 
     TextArea textArea(3, 3, 64, 7, richText);
 
-    // 创建后台缓冲区
-    HANDLE hBackBuffer = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    // // 创建后台缓冲区
+    // HANDLE hBackBuffer = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE, 0, NULL, CONSOLE_TEXTMODE_BUFFER, NULL);
+    // HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
-    // 清空后台缓冲区
-    CONSOLE_SCREEN_BUFFER_INFO csbi;
-    GetConsoleScreenBufferInfo(hConsole, &csbi);
-    DWORD dwBytesWritten;
-    FillConsoleOutputCharacter(hBackBuffer, ' ', csbi.dwSize.X * csbi.dwSize.Y, {0, 0}, &dwBytesWritten);
-    FillConsoleOutputAttribute(hBackBuffer, csbi.wAttributes, csbi.dwSize.X * csbi.dwSize.Y, {0, 0}, &dwBytesWritten);
-    CONSOLE_CURSOR_INFO cci;
-    cci.bVisible = false;
-    cci.dwSize = 1;
-    SetConsoleCursorInfo(hBackBuffer, &cci);
-    SetConsoleCursorInfo(hConsole, &cci);
+    // // 清空后台缓冲区
+    // CONSOLE_SCREEN_BUFFER_INFO csbi;
+    // GetConsoleScreenBufferInfo(hConsole, &csbi);
+    // DWORD dwBytesWritten;
+    // FillConsoleOutputCharacter(hBackBuffer, ' ', csbi.dwSize.X * csbi.dwSize.Y, {0, 0}, &dwBytesWritten);
+    // FillConsoleOutputAttribute(hBackBuffer, csbi.wAttributes, csbi.dwSize.X * csbi.dwSize.Y, {0, 0}, &dwBytesWritten);
+    // CONSOLE_CURSOR_INFO cci;
+    // cci.bVisible = false;
+    // cci.dwSize = 1;
+    // SetConsoleCursorInfo(hBackBuffer, &cci);
+    // SetConsoleCursorInfo(hConsole, &cci);
 
     textArea.setTitle(RichText("TextArea Demo", COLOR_RED));
     textArea.draw();
 
     while(true) {
-        if (_kbhit()) {SetConsoleActiveScreenBuffer(hBackBuffer);
+        if (_kbhit()) {
+            // SetConsoleActiveScreenBuffer(hBackBuffer);
             char opt = _getch();
             textArea.setText(richText + StringPart("Last Key: " + std::to_string(opt), COLOR_CYAN));
             switch(opt) {
@@ -55,22 +56,22 @@ int main() {
                     textArea.moveRight();
                     break;
                 case 'q':
-                    SetConsoleActiveScreenBuffer(hConsole);
-                    CloseHandle(hBackBuffer);
+                    // SetConsoleActiveScreenBuffer(hConsole);
+                    // CloseHandle(hBackBuffer);
                     return 0;
             }
             
             
 
-            // 清空后台缓冲区
-            FillConsoleOutputCharacter(hBackBuffer, ' ', csbi.dwSize.X * csbi.dwSize.Y, {0, 0}, &dwBytesWritten);
-            FillConsoleOutputAttribute(hBackBuffer, csbi.wAttributes, csbi.dwSize.X * csbi.dwSize.Y, {0, 0}, &dwBytesWritten);
+            // // 清空后台缓冲区
+            // FillConsoleOutputCharacter(hBackBuffer, ' ', csbi.dwSize.X * csbi.dwSize.Y, {0, 0}, &dwBytesWritten);
+            // FillConsoleOutputAttribute(hBackBuffer, csbi.wAttributes, csbi.dwSize.X * csbi.dwSize.Y, {0, 0}, &dwBytesWritten);
 
-            // 在后台缓冲区中绘制
+            // // 在后台缓冲区中绘制
             textArea.draw();
 
-            // 切换到后台缓冲区，显示绘制的内容
-            SetConsoleActiveScreenBuffer(hConsole);
+            // // 切换到后台缓冲区，显示绘制的内容
+            // SetConsoleActiveScreenBuffer(hConsole);
         }
         Sleep(1);
     }

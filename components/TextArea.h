@@ -3,7 +3,6 @@
 
 #include "BaseComponent.h"
 #include <windows.h>
-#include <vector>
 #include <conio.h>
 #include "../utils/RichText.h"
 #include "Rect.h"
@@ -12,7 +11,6 @@
 class TextArea : public BaseComponent {
 private:
     Text text_ = Text(0, 0, 0, 0);
-    RichText title_;
     Rect border_ = Rect(0, 0, 0, 0);
 
 public:
@@ -35,13 +33,6 @@ public:
         //获得缓冲区信息
         CONSOLE_SCREEN_BUFFER_INFO csbi;
         GetConsoleScreenBufferInfo(hConsole, &csbi);
-        
-        //绘制标题
-        SetConsoleCursorPosition(hConsole, {static_cast<short>(left + 1), static_cast<short>(top - 1)});
-        for(auto part : title_.getParts()) {
-            SetConsoleTextAttribute(hConsole, BackgroundColorToWinColor(getBackColor(part.color)) | FrontColorToWinColor(getFrontColor(part.color)));
-            printf("%s", part.text.c_str());
-        }
 
         text_.draw();
 
@@ -81,7 +72,7 @@ public:
     }
 
     void setTitle(const RichText& newTitle) {
-        this->title_ = newTitle;
+        border_.setTitle(newTitle);
     }
 };
 
