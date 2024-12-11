@@ -4,7 +4,7 @@
 class BaseComponent {
 protected:
     int top, left, width, height;
-    bool focused;
+    bool focusStatus;
 
 public:
     BaseComponent(int top, int left, int width, int height) : top(top), left(left), width(width), height(height) {};
@@ -36,8 +36,12 @@ public:
         return height;
     }
 
-    void setFocused(bool focused) {
-        this->focused = focused;
+    void setFocus(bool focused) {
+        this->focusStatus = focused;
+    }
+
+    bool isFocused() {
+        return focusStatus;
     }
 
     void setPosition(int top, int left) {

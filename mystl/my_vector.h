@@ -88,6 +88,16 @@ public:
         }
     }
 
+    void erase(size_t index) override {
+        if (index >= m_size) {
+            throw std::out_of_range("Index out of range");
+        }
+        for (size_t i = index; i < m_size - 1; ++i) {
+            m_data[i] = std::move(m_data[i + 1]);
+        }
+        --m_size;
+    }
+
     T& top() override {
         return back();
     }
