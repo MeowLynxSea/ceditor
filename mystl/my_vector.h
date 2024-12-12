@@ -88,7 +88,7 @@ public:
         }
     }
 
-    void erase(size_t index) override {
+    void erase(size_t index) {
         if (index >= m_size) {
             throw std::out_of_range("Index out of range");
         }
