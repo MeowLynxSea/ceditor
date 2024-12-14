@@ -3,7 +3,7 @@
 
 int main() {
     SyntaxHighlighter highlighter = SyntaxHighlighter("cpp");
-    TextArea textArea = TextArea(1, 1, 100, 28);
+    TextArea textArea = TextArea(1, 1, 100, 50);
     std::string rawText;
     // read in SyntaxHighlighter_test.cpp
     std::ifstream file("SyntaxHighlighter_test.cpp");
@@ -33,6 +33,7 @@ int main() {
 
     textArea.setTitle(RichText("SyntaxHighlighter Test", COLOR_LIGHTRED));
     textArea.setText(richText);
+    // textArea.setText(RichText(rawText, COLOR_WHITE));
     textArea.draw();
 
     while(true) {

@@ -9,7 +9,7 @@ int main() {
     richText += StringPart(" with colors!\n", COLOR_RED);
     richText += "And more text.\n";
     richText += StringPart("And more more more text.", COLOR_GREEN);
-    richText += " And more more more more more text.\n";
+    richText += " And more more more more more text.\n\n111\n\n";
     richText += StringPart("And more more more more more more text.", COLOR_BLUE);
     richText += " And more more more more more more more text.\n";
     richText += StringPart("    With some spaces before And more more more more more more more more text.\n", COLOR_YELLOW);
@@ -73,7 +73,6 @@ int main() {
             // // 切换到后台缓冲区，显示绘制的内容
             // SetConsoleActiveScreenBuffer(hConsole);
         }
-        Sleep(1);
     }
 
     return 0;

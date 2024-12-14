@@ -29,28 +29,33 @@ public:
 
         SetConsoleTextAttribute(hConsole, BackgroundColorToWinColor(getBackColor(color_)) | FrontColorToWinColor(getFrontColor(color_)));
 
+        std::string outputTarget = "|";
         for(int i = 1; i < height - 1 && top + i < csbi.dwSize.Y - 1; i++) {
             if(left >= 0) {
                 SetConsoleCursorPosition(hConsole, {static_cast<short>(left - 1), static_cast<short>(top + i - 1)});
-                putchar('|');
+                WriteConsoleA(hConsole, outputTarget.c_str(), outputTarget.length(), NULL, NULL);
             }
             if(left + width - 1 < csbi.dwSize.X) {
                 SetConsoleCursorPosition(hConsole, {static_cast<short>(left + width - 2), static_cast<short>(top + i - 1)});
-                putchar('|');
+                WriteConsoleA(hConsole, outputTarget.c_str(), outputTarget.length(), NULL, NULL);
             }
         }
+        outputTarget = "-";
         if(top >= 0) {
             for(int i = 0; i < width && left + i < csbi.dwSize.X; i++) {
                 if(i > 1 && i < strlen(title_.plainText().c_str()) + 2) continue;
                 SetConsoleCursorPosition(hConsole, {static_cast<short>(left + i - 1), static_cast<short>(top - 1)});
-                putchar('-');
+                WriteConsoleA(hConsole, outputTarget.c_str(), outputTarget.length(), NULL, NULL);
             }
         }
         if(top + height - 1 < csbi.dwSize.Y) {
+            outputTarget = "";
             for(int i = 0; i < width && left + i < csbi.dwSize.X; i++) {
-                SetConsoleCursorPosition(hConsole, {static_cast<short>(left + i - 1), static_cast<short>(top + height - 2)});
-                putchar('-');
+                outputTarget += "-";
+                
             }
+            SetConsoleCursorPosition(hConsole, {static_cast<short>(left - 1), static_cast<short>(top + height - 2)});
+            WriteConsoleA(hConsole, outputTarget.c_str(), outputTarget.length(), NULL, NULL);
         }
 
         //绘制标题

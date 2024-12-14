@@ -6,6 +6,7 @@
 #include "../mystl/my_vector.h"
 #include <conio.h>
 #include "../utils/RichText.h"
+#include <fstream>
 
 class Text : public BaseComponent {
 private:
@@ -31,15 +32,19 @@ public:
         lines_.clear();
         RichText line;
         maxLineWidth_ = 0;
+        // std::ofstream out("log.txt");
         for(auto part : text.getParts()) {
             if(part.text.find('\n') == std::string::npos) {
                 line += part;
                 // printf("Add: %s\n", part.text.c_str());
             } else {
                 size_t begin = 0;
-                while((begin = part.text.find('\n', begin)) != std::string::npos) {
+                while((begin = part.text.find('\n', 0)) != std::string::npos) {
                     line += StringPart(part.text.substr(0, begin), part.color);
                     // printf("Add: %s\n", part.text.substr(0, begin).c_str());
+                    if(line.plainText() == "\n" || line.plainText() == "\r\n" || line.plainText() == "\r"){
+                        line = "";
+                    }
                     lines_.push_back(line);
                     if(maxLineWidth_ < line.length()) {
                         maxLineWidth_ = line.length();
@@ -53,10 +58,16 @@ public:
                 // printf("Add: %s\n", part.text.c_str());
             }
         }
+        if(line.plainText() == "\n") {
+            line = "";
+        }
         lines_.push_back(line);
         if(maxLineWidth_ < line.length()) {
             maxLineWidth_ = line.length();
         }
+        // for(int i = 0; i < lines_.size(); i++) {
+        //     out << lines_[i].plainText() << std::endl << "-------------------------------------------" << std::endl;
+        // }
     }
 
     RichText getText() {
@@ -71,17 +82,34 @@ public:
 
         for(int i = viewTop_; i < viewTop_ + height && i < lines_.size(); i++) {
             RichText drawTarget = lines_[i].substr(viewLeft_, std::min(width, csbi.dwSize.X - left));
-            SetConsoleCursorPosition(hConsole, {static_cast<short>(left - 1), static_cast<short>(top + i - viewTop_ - 1)});
+            int currentLength = 0;
+            CHAR_INFO buffer[width * 1];
             for(auto part : drawTarget.getParts()) {
-                SetConsoleTextAttribute(hConsole, BackgroundColorToWinColor(getBackColor(part.color)) | FrontColorToWinColor(getFrontColor(part.color)));
-                printf("%s", part.text.c_str());
+                // SetConsoleTextAttribute(hConsole, BackgroundColorToWinColor(getBackColor(part.color)) | FrontColorToWinColor(getFrontColor(part.color)));
+                // printf("%s", part.text.c_str());
+                // SetConsoleCursorPosition(hConsole, {static_cast<short>(left + currentLength - 1), static_cast<short>(top + i - viewTop_ - 1)});
+                // WriteConsoleA(hConsole, part.text.c_str(), part.text.length(), NULL, NULL);
+                for(int j = 0; j < part.text.length(); j++) {
+                    buffer[currentLength + j].Char.UnicodeChar = part.text[j];
+                    buffer[currentLength + j].Attributes = BackgroundColorToWinColor(getBackColor(part.color)) | FrontColorToWinColor(getFrontColor(part.color));
+                }
+                currentLength += part.text.length();
             }
             CONSOLE_SCREEN_BUFFER_INFO currentCSBI;
             GetConsoleScreenBufferInfo(hConsole, &currentCSBI);
-            for(int cx = currentCSBI.dwCursorPosition.X; cx < left + width - 1; cx++) {
-                SetConsoleCursorPosition(hConsole, {static_cast<short>(cx), static_cast<short>(currentCSBI.dwCursorPosition.Y)});
-                printf(" ");
+            // std::string space = "";
+            for(int j = 0; j < width - drawTarget.plainText().length(); j++) {
+                // space += " ";
+                buffer[currentLength + j].Char.UnicodeChar = ' ';
+                buffer[currentLength + j].Attributes = currentCSBI.wAttributes;
             }
+            // SetConsoleCursorPosition(hConsole, {static_cast<short>(left + drawTarget.plainText().length() - 1), static_cast<short>(top + i - viewTop_ - 1)});
+            // WriteConsoleA(hConsole, space.c_str(), space.length(), NULL, NULL);
+            SetConsoleCursorPosition(hConsole, {static_cast<short>(left), static_cast<short>(top + i - viewTop_)});
+            COORD bufferSize = {static_cast<short>(width), 1};
+            COORD bufferCoord = {0, 0};
+            SMALL_RECT rect = {static_cast<short>(left - 1), static_cast<short>(top + i - viewTop_ - 1), static_cast<short>(left + width - 1), static_cast<short>(top + i - viewTop_ + 1)};
+            WriteConsoleOutput(hConsole, buffer, bufferSize, bufferCoord, &rect);
         }
     }
 
