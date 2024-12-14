@@ -28,6 +28,7 @@ if
 inline
 int
 long
+include
 mutable
 namespace
 new
@@ -60,6 +61,8 @@ virtual
 void
 volatile
 wchar_t
+while
+for
 
 //some useful keywords
 std

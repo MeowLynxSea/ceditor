@@ -53,11 +53,9 @@ public:
                 // printf("Add: %s\n", part.text.c_str());
             }
         }
-        if(line.length() > 0) {
-            lines_.push_back(line);
-            if(maxLineWidth_ < line.length()) {
-                maxLineWidth_ = line.length();
-            }
+        lines_.push_back(line);
+        if(maxLineWidth_ < line.length()) {
+            maxLineWidth_ = line.length();
         }
     }
 

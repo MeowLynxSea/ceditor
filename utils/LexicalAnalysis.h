@@ -6,7 +6,7 @@
 #include <fstream>
 #include "../mystl/my_vector.h"
 
-enum class TokenType {
+enum class CodeTokenType {
     TOKEN_TYPE_IDENTIFIER = 9999,
     TOKEN_TYPE_NUMBER = 10000,
     TOKEN_TYPE_STRING = 10001,
@@ -15,15 +15,70 @@ enum class TokenType {
     TOKEN_TYPE_EOF,
     TOKEN_TYPE_UNDEFINED,
     TOKEN_TYPE_COMMENT,
-    TOKEN_TYPE_NEWLINE
+    TOKEN_TYPE_NEWLINE,
+    TOKEN_TYPE_SPACE
 };
+
+//用于将字符串和CodeTokenType互转的函数
+std::string CodeTokenTypeToString(CodeTokenType type) {
+    switch(type) {
+        case CodeTokenType::TOKEN_TYPE_IDENTIFIER:
+            return "TOKEN_TYPE_IDENTIFIER";
+        case CodeTokenType::TOKEN_TYPE_NUMBER:
+            return "TOKEN_TYPE_NUMBER";
+        case CodeTokenType::TOKEN_TYPE_STRING:
+            return "TOKEN_TYPE_STRING";
+        case CodeTokenType::TOKEN_TYPE_RESERVE_WORD:
+            return "TOKEN_TYPE_RESERVE_WORD";
+        case CodeTokenType::TOKEN_TYPE_OPERATOR_OR_DELIMITER:
+            return "TOKEN_TYPE_OPERATOR_OR_DELIMITER";
+        case CodeTokenType::TOKEN_TYPE_EOF:
+            return "TOKEN_TYPE_EOF";
+        case CodeTokenType::TOKEN_TYPE_UNDEFINED:
+            return "TOKEN_TYPE_UNDEFINED";
+        case CodeTokenType::TOKEN_TYPE_COMMENT:
+            return "TOKEN_TYPE_COMMENT";
+        case CodeTokenType::TOKEN_TYPE_NEWLINE:
+            return "TOKEN_TYPE_NEWLINE";
+        case CodeTokenType::TOKEN_TYPE_SPACE:
+            return "TOKEN_TYPE_SPACE";
+        default:
+            return "TOKEN_TYPE_UNDEFINED";
+    }
+}
+
+CodeTokenType stringToCodeTokenType(std::string str) {
+    if(str == "TOKEN_TYPE_IDENTIFIER") {
+        return CodeTokenType::TOKEN_TYPE_IDENTIFIER;
+    } else if(str == "TOKEN_TYPE_NUMBER") {
+        return CodeTokenType::TOKEN_TYPE_NUMBER;
+    } else if(str == "TOKEN_TYPE_STRING") {
+        return CodeTokenType::TOKEN_TYPE_STRING;
+    } else if(str == "TOKEN_TYPE_RESERVE_WORD") {
+        return CodeTokenType::TOKEN_TYPE_RESERVE_WORD;
+    } else if(str == "TOKEN_TYPE_OPERATOR_OR_DELIMITER") {
+        return CodeTokenType::TOKEN_TYPE_OPERATOR_OR_DELIMITER;
+    } else if(str == "TOKEN_TYPE_EOF") {
+        return CodeTokenType::TOKEN_TYPE_EOF;
+    } else if(str == "TOKEN_TYPE_UNDEFINED") {
+        return CodeTokenType::TOKEN_TYPE_UNDEFINED;
+    } else if(str == "TOKEN_TYPE_COMMENT") {
+        return CodeTokenType::TOKEN_TYPE_COMMENT;
+    } else if(str == "TOKEN_TYPE_NEWLINE") {
+        return CodeTokenType::TOKEN_TYPE_NEWLINE;
+    } else if(str == "TOKEN_TYPE_SPACE") {
+        return CodeTokenType::TOKEN_TYPE_SPACE;
+    } else {
+        return CodeTokenType::TOKEN_TYPE_UNDEFINED;
+    }
+}
 
 struct Token {
     std::string value;
-    TokenType type;
+    CodeTokenType type;
 
     Token() {}
-    Token(std::string value, TokenType type) {
+    Token(std::string value, CodeTokenType type) {
         this->value = value;
         this->type = type;
     }
@@ -120,10 +175,14 @@ private:
     void Scan(int & currentIndex) {
         currentToken = "";
 
-        while(preprocessedText[currentIndex] == ' ') {
-            currentToken += preprocessedText[currentIndex++];
+        if(preprocessedText[currentIndex] == ' ' || preprocessedText[currentIndex] == '\n' || preprocessedText[currentIndex] == '\t') {
+            while(preprocessedText[currentIndex] == ' ' || preprocessedText[currentIndex] == '\n' || preprocessedText[currentIndex] == '\t') {
+                currentToken += preprocessedText[currentIndex++];
+            }
+            syn = static_cast<int>(CodeTokenType::TOKEN_TYPE_SPACE);
+            return;
         }
-
+        
         // printf("current letter: [%d]%c\n", currentIndex, preprocessedText[currentIndex]);
 
         if(isLetter(preprocessedText[currentIndex])) {
@@ -132,7 +191,7 @@ private:
             }
 
             syn = searchReserveWord(currentToken);
-            syn = syn == -1 ? static_cast<int>(TokenType::TOKEN_TYPE_IDENTIFIER) : syn;
+            syn = syn == -1 ? static_cast<int>(CodeTokenType::TOKEN_TYPE_IDENTIFIER) : syn;
             
             return;
         } else if(isDigit(preprocessedText[currentIndex])) {
@@ -140,7 +199,7 @@ private:
                 currentToken += preprocessedText[currentIndex++];
             }
 
-            syn = static_cast<int>(TokenType::TOKEN_TYPE_NUMBER);
+            syn = static_cast<int>(CodeTokenType::TOKEN_TYPE_NUMBER);
 
             return;
         } else if((isOperatorOrDelimiter(std::string(1, preprocessedText[currentIndex])) != -1) && 
@@ -151,7 +210,7 @@ private:
                     currentToken += preprocessedText[currentIndex++];
                 }
                 currentToken += preprocessedText[currentIndex++];
-                syn = static_cast<int>(TokenType::TOKEN_TYPE_STRING);
+                syn = static_cast<int>(CodeTokenType::TOKEN_TYPE_STRING);
                 return;
             }
             if(preprocessedText[currentIndex] == '\'') {
@@ -160,7 +219,7 @@ private:
                     currentToken += preprocessedText[currentIndex++];
                 }
                 currentToken += preprocessedText[currentIndex++];
-                syn = static_cast<int>(TokenType::TOKEN_TYPE_STRING);
+                syn = static_cast<int>(CodeTokenType::TOKEN_TYPE_STRING);
                 return;
             }
             currentToken += preprocessedText[currentIndex++];
@@ -182,7 +241,7 @@ private:
                 currentToken += preprocessedText[currentIndex];
                 currentToken += preprocessedText[currentIndex + 1];
                 if(currentToken == "//") {
-                    syn = static_cast<int>(TokenType::TOKEN_TYPE_COMMENT);
+                    syn = static_cast<int>(CodeTokenType::TOKEN_TYPE_COMMENT);
                     currentIndex += 2;
                     while(preprocessedText[currentIndex] != '\n' && currentIndex < preprocessedText.size()) {
                         currentToken += preprocessedText[currentIndex++];
@@ -190,7 +249,7 @@ private:
                     return;
                 }
                 if(currentToken == "/*") {
-                    syn = static_cast<int>(TokenType::TOKEN_TYPE_COMMENT);
+                    syn = static_cast<int>(CodeTokenType::TOKEN_TYPE_COMMENT);
                     currentIndex += 2;
                     while(currentIndex < rawText.size() - 1 && !(preprocessedText[currentIndex] == '*' && preprocessedText[currentIndex + 1] == '/')) {
                         currentToken += preprocessedText[currentIndex++];
@@ -213,16 +272,16 @@ private:
             }
             return;
         } else if (preprocessedText[currentIndex] == '\0' || currentIndex >= preprocessedText.size()) {
-            syn = static_cast<int>(TokenType::TOKEN_TYPE_EOF);
+            syn = static_cast<int>(CodeTokenType::TOKEN_TYPE_EOF);
             currentIndex++;
             return;
         } else if(preprocessedText[currentIndex] == '\n') {
-            syn = static_cast<int>(TokenType::TOKEN_TYPE_NEWLINE);
+            syn = static_cast<int>(CodeTokenType::TOKEN_TYPE_NEWLINE);
             currentToken = "\n";
             currentIndex++;
             return;
         } else {
-            syn = static_cast<int>(TokenType::TOKEN_TYPE_UNDEFINED);
+            syn = static_cast<int>(CodeTokenType::TOKEN_TYPE_UNDEFINED);
             currentIndex++;
             return;
         }
@@ -263,39 +322,39 @@ public:
         syn = -1;
         int currentIndex = 0;
         tokens.clear();
-        while(syn != static_cast<int>(TokenType::TOKEN_TYPE_EOF) && syn != static_cast<int>(TokenType::TOKEN_TYPE_UNDEFINED)) {
+        while(syn != static_cast<int>(CodeTokenType::TOKEN_TYPE_EOF) && syn != static_cast<int>(CodeTokenType::TOKEN_TYPE_UNDEFINED)) {
             Scan(currentIndex);
-            printf("currentToken: [%s]\n", currentToken.c_str());
-            if(syn == static_cast<int>(TokenType::TOKEN_TYPE_STRING)) {
-                tokens.push_back(Token(currentToken, TokenType::TOKEN_TYPE_STRING));
+            // printf("currentToken: [%s]\n", currentToken.c_str());
+            if(syn == static_cast<int>(CodeTokenType::TOKEN_TYPE_STRING)) {
+                tokens.push_back(Token(currentToken, CodeTokenType::TOKEN_TYPE_STRING));
                 // printf("string: %s\n", currentToken.c_str());
-            } else if(syn == static_cast<int>(TokenType::TOKEN_TYPE_IDENTIFIER)) {
-                tokens.push_back(Token(currentToken, TokenType::TOKEN_TYPE_IDENTIFIER));
+            } else if(syn == static_cast<int>(CodeTokenType::TOKEN_TYPE_IDENTIFIER)) {
+                tokens.push_back(Token(currentToken, CodeTokenType::TOKEN_TYPE_IDENTIFIER));
                 // printf("identifier: %s\n", currentToken.c_str());
-            } else if(syn == static_cast<int>(TokenType::TOKEN_TYPE_NUMBER)) {
-                tokens.push_back(Token(currentToken, TokenType::TOKEN_TYPE_NUMBER));
+            } else if(syn == static_cast<int>(CodeTokenType::TOKEN_TYPE_NUMBER)) {
+                tokens.push_back(Token(currentToken, CodeTokenType::TOKEN_TYPE_NUMBER));
                 // printf("number: %s\n", currentToken.c_str());
             } else if(syn > 0 && syn < reserveWordCount) {
-                tokens.push_back(Token(currentToken, TokenType::TOKEN_TYPE_RESERVE_WORD));
+                tokens.push_back(Token(currentToken, CodeTokenType::TOKEN_TYPE_RESERVE_WORD));
                 // printf("reserve word: %s\n", currentToken.c_str());
             } else if(syn >= reserveWordCount && syn < reserveWordCount + operatorAndDelimiterCount) {
-                tokens.push_back(Token(currentToken, TokenType::TOKEN_TYPE_OPERATOR_OR_DELIMITER));
+                tokens.push_back(Token(currentToken, CodeTokenType::TOKEN_TYPE_OPERATOR_OR_DELIMITER));
                 // printf("operator or delimiter: %s\n", currentToken.c_str());
-            } else if(syn == static_cast<int>(TokenType::TOKEN_TYPE_COMMENT)) {
-                tokens.push_back(Token(currentToken, TokenType::TOKEN_TYPE_COMMENT));
+            } else if(syn == static_cast<int>(CodeTokenType::TOKEN_TYPE_COMMENT)) {
+                tokens.push_back(Token(currentToken, CodeTokenType::TOKEN_TYPE_COMMENT));
                 // printf("comment: %s\n", currentToken.c_str());
-            } else if(syn == static_cast<int>(TokenType::TOKEN_TYPE_EOF)) {
-                tokens.push_back(Token(currentToken, TokenType::TOKEN_TYPE_EOF));
+            } else if(syn == static_cast<int>(CodeTokenType::TOKEN_TYPE_EOF)) {
+                tokens.push_back(Token(currentToken, CodeTokenType::TOKEN_TYPE_EOF));
                 // printf("EOF: %s\n", currentToken.c_str());
-            } else if(syn == static_cast<int>(TokenType::TOKEN_TYPE_NEWLINE)) {
-                tokens.push_back(Token(currentToken, TokenType::TOKEN_TYPE_NEWLINE));
+            } else if(syn == static_cast<int>(CodeTokenType::TOKEN_TYPE_NEWLINE)) {
+                tokens.push_back(Token(currentToken, CodeTokenType::TOKEN_TYPE_NEWLINE));
                 // printf("newline: %s\n", currentToken.c_str());
             } else {
-                tokens.push_back(Token(currentToken, TokenType::TOKEN_TYPE_UNDEFINED));
+                tokens.push_back(Token(currentToken, CodeTokenType::TOKEN_TYPE_UNDEFINED));
                 // printf("undefined: %s\n", currentToken.c_str());
             }
             if(currentIndex >= preprocessedText.length()) {
-                syn = static_cast<int>(TokenType::TOKEN_TYPE_EOF);
+                syn = static_cast<int>(CodeTokenType::TOKEN_TYPE_EOF);
             }
         }
         return tokens;

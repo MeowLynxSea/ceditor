@@ -24,21 +24,21 @@ else  j=b-a;\n\
     MyVector<Token> tokens = lexicalAnalysis.tokenize();
     std::cout << "Tokenized text: " << std::endl;
     for (int i = 0; i < tokens.size(); i++) {
-        if(tokens[i].type == TokenType::TOKEN_TYPE_IDENTIFIER) {
+        if(tokens[i].type == CodeTokenType::TOKEN_TYPE_IDENTIFIER) {
             std::cout << std::fixed << std::setw(25) << std::setfill(' ') << std::right << "Identifier: ";
-        } else if(tokens[i].type == TokenType::TOKEN_TYPE_NUMBER) {
+        } else if(tokens[i].type == CodeTokenType::TOKEN_TYPE_NUMBER) {
             std::cout << std::fixed << std::setw(25) << std::setfill(' ') << std::right << "Number: ";
-        } else if(tokens[i].type == TokenType::TOKEN_TYPE_OPERATOR_OR_DELIMITER) {
+        } else if(tokens[i].type == CodeTokenType::TOKEN_TYPE_OPERATOR_OR_DELIMITER) {
             std::cout << std::fixed << std::setw(25) << std::setfill(' ') << std::right << "Operator or Delimiter: ";
-        } else if(tokens[i].type == TokenType::TOKEN_TYPE_STRING) {
+        } else if(tokens[i].type == CodeTokenType::TOKEN_TYPE_STRING) {
             std::cout << std::fixed << std::setw(25) << std::setfill(' ') << std::right << "String: ";
-        } else if(tokens[i].type == TokenType::TOKEN_TYPE_RESERVE_WORD) {
+        } else if(tokens[i].type == CodeTokenType::TOKEN_TYPE_RESERVE_WORD) {
             std::cout << std::fixed << std::setw(25) << std::setfill(' ') << std::right << "Reserve word: ";
-        } else if(tokens[i].type == TokenType::TOKEN_TYPE_EOF) {
+        } else if(tokens[i].type == CodeTokenType::TOKEN_TYPE_EOF) {
             std::cout << std::fixed << std::setw(25) << std::setfill(' ') << std::right << "End of file.";
-        } else if(tokens[i].type == TokenType::TOKEN_TYPE_COMMENT) {
+        } else if(tokens[i].type == CodeTokenType::TOKEN_TYPE_COMMENT) {
             std::cout << std::fixed << std::setw(25) << std::setfill(' ') << std::right << "Comment: ";
-        } else if(tokens[i].type == TokenType::TOKEN_TYPE_NEWLINE) {
+        } else if(tokens[i].type == CodeTokenType::TOKEN_TYPE_NEWLINE) {
             std::cout << std::fixed << std::setw(25) << std::setfill(' ') << std::right << "Newline  ";
         } else {
             std::cout << std::fixed << std::setw(25) << std::setfill(' ') << std::right << "Unknown token: ";
