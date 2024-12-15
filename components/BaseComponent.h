@@ -44,7 +44,7 @@ public:
         return focusStatus;
     }
 
-    void setPosition(int top, int left) {
+    void setPosition(int left, int top) {
         this->top = top;
         this->left = left;
     }
