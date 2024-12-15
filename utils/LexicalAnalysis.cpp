@@ -23,7 +23,7 @@ else  j=b-a;\n\
     lexicalAnalysis.printProcessedText();
     MyVector<Token> tokens = lexicalAnalysis.tokenize();
     std::cout << "Tokenized text: " << std::endl;
-    for (int i = 0; i < tokens.size(); i++) {
+    for (size_t i = 0; i < tokens.size(); i++) {
         if(tokens[i].type == CodeTokenType::TOKEN_TYPE_IDENTIFIER) {
             std::cout << std::fixed << std::setw(25) << std::setfill(' ') << std::right << "Identifier: ";
         } else if(tokens[i].type == CodeTokenType::TOKEN_TYPE_NUMBER) {
@@ -45,7 +45,7 @@ else  j=b-a;\n\
         }
         std::cout << " " << tokens[i].value << std::endl;
     }
-    for (int i = 0; i < tokens.size(); i++) {
+    for (size_t i = 0; i < tokens.size(); i++) {
         std::cout << tokens[i].value;
     }
 

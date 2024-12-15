@@ -98,7 +98,7 @@ private:
     int syn = -1;
 
     int searchReserveWord(std::string word) {
-        for(int i = 0; i < reserveWord.size(); i++) {
+        for(size_t i = 0; i < reserveWord.size(); i++) {
             if (word == reserveWord[i]) {
                 return i;
             }
@@ -107,7 +107,7 @@ private:
     }
 
     bool isLetter(char c) {
-        if(c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c == '_') {
+        if((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_') {
             return true;
         }
         return false;
@@ -172,7 +172,7 @@ private:
         }
     }
 
-    void Scan(int & currentIndex) {
+    void Scan(size_t & currentIndex) {
         currentToken = "";
 
         if(preprocessedText[currentIndex] == ' ' || preprocessedText[currentIndex] == '\n' || preprocessedText[currentIndex] == '\t') {
@@ -320,7 +320,7 @@ public:
 
     MyVector<Token> tokenize() {
         syn = -1;
-        int currentIndex = 0;
+        size_t currentIndex = 0;
         tokens.clear();
         while(syn != static_cast<int>(CodeTokenType::TOKEN_TYPE_EOF) && syn != static_cast<int>(CodeTokenType::TOKEN_TYPE_UNDEFINED)) {
             Scan(currentIndex);
