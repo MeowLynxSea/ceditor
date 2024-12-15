@@ -16,10 +16,10 @@ private:
     int maxLineWidth_ = 0;
 
 public:
-    Text(int top, int left, int width, int height) : BaseComponent(top, left, width, height) {
+    Text(int left, int top, int width, int height) : BaseComponent(top, left, width, height) {
         text_ = RichText();
     }
-    Text(int top, int left, int width, int height, const RichText& text) : BaseComponent(top, left, width, height) {
+    Text(int left, int top, int width, int height, const RichText& text) : BaseComponent(top, left, width, height) {
         text_ = text;
     }
     ~Text() override {

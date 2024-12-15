@@ -14,12 +14,12 @@ private:
     Rect border_ = Rect(0, 0, 0, 0);
 
 public:
-    TextArea(int top, int left, int width, int height) : BaseComponent(top, left, width, height){
+    TextArea(int left, int top, int width, int height) : BaseComponent(top, left, width, height){
         border_ = Rect(left, top, width, height);
         text_ = Text(left + 1, top + 1, width - 2, height - 2);
         text_.setText(RichText());
     }
-    TextArea(int top, int left, int width, int height, const RichText& text) : BaseComponent(top, left, width, height){
+    TextArea(int left, int top, int width, int height, const RichText& text) : BaseComponent(top, left, width, height){
         border_ = Rect(left, top, width, height);
         text_ = Text(left + 1, top + 1, width - 2, height - 2);
         text_.setText(text);
@@ -65,6 +65,14 @@ public:
         if(text_.getViewTop() < text_.getMaxLineCount() - height + 2) {
             text_.setViewTop(text_.getViewTop() + 1);
         }
+    }
+
+    int getViewLeft() {
+        return text_.getViewLeft();
+    }
+
+    int getViewTop() {
+        return text_.getViewTop();
     }
 
     void onKeyPress(int key) override {

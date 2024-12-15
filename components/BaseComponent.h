@@ -7,7 +7,7 @@ protected:
     bool focusStatus;
 
 public:
-    BaseComponent(int top, int left, int width, int height) : top(top), left(left), width(width), height(height) {};
+    BaseComponent(int left, int top, int width, int height) : top(top), left(left), width(width), height(height) {};
     virtual ~BaseComponent() {};
 
     void setTop(int top) {

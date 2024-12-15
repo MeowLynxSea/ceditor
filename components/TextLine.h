@@ -13,11 +13,11 @@ private:
     Rect border_ = Rect(0, 0, 0, 0);
 
 public:
-    TextLine(int top, int left, int width, int height) : BaseComponent(top, left, width, height){
+    TextLine(int left, int top, int width, int height) : BaseComponent(top, left, width, height){
         text_ = Text(top + 1, left + 1, width - 2, 1);
         border_ = Rect(top, left, width, height);
     }
-    TextLine(int top, int left, int width, int height, const RichText& text) : BaseComponent(top, left, width, height){
+    TextLine(int left, int top, int width, int height, const RichText& text) : BaseComponent(top, left, width, height){
         text_ = Text(top + 1, left + 1, width - 2, 1, text);
         border_ = Rect(top, left, width, height);
     }
