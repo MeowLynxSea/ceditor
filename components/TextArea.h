@@ -50,7 +50,7 @@ public:
     }
 
     void moveRight() {
-        if(text_.getViewLeft() < text_.getMaxLineWidth() - width + 2) {
+        if(text_.getViewLeft() <= text_.getMaxLineWidth() - width + 2) {
             text_.setViewLeft(text_.getViewLeft() + 1);
         }
     }
