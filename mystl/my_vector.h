@@ -211,6 +211,24 @@ public:
         long long operator-(iterator other) const {
             return ptr - other.ptr;
         }
+
+        iterator& operator+=(size_t n) {
+            ptr += n;
+            return *this;
+        }
+        iterator& operator-=(size_t n) {
+            ptr -= n;
+            return *this;
+        }
+        
+        friend iterator operator++(iterator& ite) {
+            ++ite.ptr;
+            return ite;
+        }
+        friend iterator operator--(iterator& ite) {
+            --ite.ptr;
+            return ite;
+        }
     };
 
     iterator begin() {
@@ -223,6 +241,14 @@ public:
 
     void erase(iterator target) {
         erase(target - begin());
+    }
+
+    void reverse() {
+        MyVector<T> tmp = *this;
+        for (size_t i = 0; i < m_size / 2; ++i) {
+            std::swap(tmp[i], tmp[m_size - i - 1]);
+        }
+        *this = tmp;
     }
 };
 
