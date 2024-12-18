@@ -173,6 +173,57 @@ public:
         }
         return m_data[index];
     }
+
+    //实现迭代器
+    struct iterator {
+        T* ptr;
+
+        iterator(T* ptr) : ptr(ptr) {}
+        T& operator*() const { return *ptr; }
+        T* operator->() const { return ptr; }
+        iterator& operator++() { ++ptr; return *this; }
+        iterator operator++(int) { iterator tmp = *this; ++ptr; return tmp; }
+        bool operator==(const iterator& other) const { return ptr == other.ptr; }
+        bool operator!=(const iterator& other) const { return ptr != other.ptr; }
+
+        iterator& operator+(size_t n) {
+            ptr += n;
+            return *this;
+        }
+        iterator operator+(size_t n) const {
+            iterator tmp = *this;
+            tmp.ptr += n;
+            return tmp;
+        }
+        long long operator+(iterator other) const {
+            return ptr + other.ptr;
+        }
+
+        iterator& operator-(size_t n) {
+            ptr -= n;
+            return *this;
+        }
+        iterator operator-(size_t n) const {
+            iterator tmp = *this;
+            tmp.ptr -= n;
+            return tmp;
+        }
+        long long operator-(iterator other) const {
+            return ptr - other.ptr;
+        }
+    };
+
+    iterator begin() {
+        return iterator(m_data);
+    }
+
+    iterator end() {
+        return iterator(m_data + m_size);
+    }
+
+    void erase(iterator target) {
+        erase(target - begin());
+    }
 };
 
 #endif // MY_VECTOR_H

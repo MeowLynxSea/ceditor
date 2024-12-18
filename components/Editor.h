@@ -15,10 +15,10 @@ private:
     std::string content_;
     RichText coloredContent_;
     std::string ruleName_;
-    std::vector<std::string> lineedContent_;
+    MyVector<std::string> lineedContent_;
 
-    std::vector<std::string> split(std::string content) {
-        std::vector<std::string> lineedContent;
+    MyVector<std::string> split(std::string content) {
+        MyVector<std::string> lineedContent;
         std::string tempStr = content_ + "\n";
         size_t pos = tempStr.find("\n");
         lineedContent.clear();
@@ -30,7 +30,7 @@ private:
         return lineedContent;
     }
 
-    std::string assemble(std::vector<std::string> lineedContent) {
+    std::string assemble(MyVector<std::string> lineedContent) {
         std::string content = "";
         for(auto line : lineedContent) {
             content += line + "\n";
