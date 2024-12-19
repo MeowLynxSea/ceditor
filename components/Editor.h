@@ -5,6 +5,7 @@
 #include "TextArea.h"
 #include "Cursor.h"
 #include "../utils/SyntaxHighlighter.h"
+#include "../utils/ActionManager.h"
 #include "../utils/RichText.h"
 #include <string>
 
@@ -16,6 +17,7 @@ private:
     RichText coloredContent_;
     std::string ruleName_;
     MyVector<std::string> lineedContent_;
+    ActionManager actionmanager_;
 
     MyVector<std::string> split(std::string content) {
         MyVector<std::string> lineedContent;

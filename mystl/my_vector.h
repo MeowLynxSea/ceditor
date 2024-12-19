@@ -220,15 +220,6 @@ public:
             ptr -= n;
             return *this;
         }
-        
-        friend iterator operator++(iterator& ite) {
-            ++ite.ptr;
-            return ite;
-        }
-        friend iterator operator--(iterator& ite) {
-            --ite.ptr;
-            return ite;
-        }
     };
 
     iterator begin() {
