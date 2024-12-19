@@ -206,7 +206,8 @@ private:
                     !maybeOperatorOrDelimiterWith2Letters(preprocessedText[currentIndex])) {
             if(preprocessedText[currentIndex] == '\"') {
                 currentToken += preprocessedText[currentIndex++];
-                while(preprocessedText[currentIndex] != '\"') {
+                while(currentIndex < preprocessedText.length()) {
+                    if(preprocessedText[currentIndex] == '\"' && preprocessedText[currentIndex - 1] != '\\') break;
                     currentToken += preprocessedText[currentIndex++];
                 }
                 currentToken += preprocessedText[currentIndex++];
@@ -215,7 +216,8 @@ private:
             }
             if(preprocessedText[currentIndex] == '\'') {
                 currentToken += preprocessedText[currentIndex++];
-                while(preprocessedText[currentIndex] != '\'') {
+                while(currentIndex < preprocessedText.length()) {
+                    if(preprocessedText[currentIndex] == '\'' && preprocessedText[currentIndex - 1] != '\\') break;
                     currentToken += preprocessedText[currentIndex++];
                 }
                 currentToken += preprocessedText[currentIndex++];
