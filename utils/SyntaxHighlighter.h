@@ -21,8 +21,8 @@ private:
 public:
     SyntaxHighlighter(std::string ruleName) {
         this->ruleName = ruleName;
-        std::ifstream file("../data/highlight/" + ruleName + "/rules.txt"); // Just for unit test
-        // std::ifstream file("./data/highlight/" + ruleName + "/keywords.txt");
+        // std::ifstream file("../data/highlight/" + ruleName + "/rules.txt"); // Just for unit test
+        std::ifstream file("./data/highlight/" + ruleName + "/rules.txt");
         if (file.is_open()) {
             // printf("keywords file open\n");
             std::string line;

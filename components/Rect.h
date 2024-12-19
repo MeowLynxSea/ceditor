@@ -13,10 +13,10 @@ private:
     MColor color_ = COLOR_WHITE;
 
 public:
-    Rect(int left, int top, int width, int height) : BaseComponent(top, left, width, height){
+    Rect(int left, int top, int width, int height) : BaseComponent(left, top, width, height){
         color_ = getColor(COLOR_WHITE, COLOR_BLACK);
     }
-    Rect(int left, int top, int width, int height, const MColor color) : BaseComponent(top, left, width, height){
+    Rect(int left, int top, int width, int height, const MColor color) : BaseComponent(left, top, width, height){
         color_ = color;
     }
     ~Rect() override {}

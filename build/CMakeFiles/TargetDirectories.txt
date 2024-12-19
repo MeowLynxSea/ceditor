@@ -1,0 +1,3 @@
+E:/ceditor/build/CMakeFiles/ceditor.dir
+E:/ceditor/build/CMakeFiles/edit_cache.dir
+E:/ceditor/build/CMakeFiles/rebuild_cache.dir

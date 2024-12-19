@@ -1,5 +1,5 @@
-#ifndef TEXTLINE_H
-#define TEXTLINE_H
+#ifndef TEXTAREA_H
+#define TEXTAREA_H
 
 #include "BaseComponent.h"
 #include <windows.h>
@@ -14,12 +14,12 @@ private:
     Rect border_ = Rect(0, 0, 0, 0);
 
 public:
-    TextArea(int left, int top, int width, int height) : BaseComponent(top, left, width, height){
+    TextArea(int left, int top, int width, int height) : BaseComponent(left, top, width, height){
         border_ = Rect(left, top, width, height);
         text_ = Text(left + 1, top + 1, width - 2, height - 2);
         text_.setText(RichText());
     }
-    TextArea(int left, int top, int width, int height, const RichText& text) : BaseComponent(top, left, width, height){
+    TextArea(int left, int top, int width, int height, const RichText& text) : BaseComponent(left, top, width, height){
         border_ = Rect(left, top, width, height);
         text_ = Text(left + 1, top + 1, width - 2, height - 2);
         text_.setText(text);
