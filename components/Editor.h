@@ -13,7 +13,7 @@ class Editor : public BaseComponent {
 private:
     TextArea textArea_ = TextArea(0, 0, 0, 0);
     Cursor cursor_ = Cursor(0, 0, false);
-    std::string content_;
+    std::string content_, originalContent_;
     RichText coloredContent_;
     std::string ruleName_;
     MyVector<std::string> lineedContent_;
@@ -54,6 +54,7 @@ public:
         cursor_.setPosition(left + 1, top + 1);
         cursor_.setBounds(left + width - 2, top + height - 2);
         content_ = "";
+        originalContent_ = "";
         cursor_.setVisibility(false);
         actionmanager_.setOriginContent(content_);
         inputstatus_ = InputStatus::Insert;
@@ -67,7 +68,14 @@ public:
         coloredContent_ = SyntaxHighlighter(ruleName_).highlight(content_);
         textArea_.setText(coloredContent_);
         lineedContent_ = split(content_);
-        if(firstTime) actionmanager_.setOriginContent(content_);
+        if(firstTime) {
+            actionmanager_.setOriginContent(content_);
+            originalContent_ = content_;
+        }
+    }
+
+    bool isChanged() {
+        return content_ != originalContent_;
     }
 
     std::string getContent() { return content_; }
@@ -95,10 +103,16 @@ public:
 
     void moveDown(int step = 1) {
         for(int i = 0; i < step; i++)
-        if(cursor_.getTop() == top + height - 2) {
-            textArea_.moveDown();
+        if(height - 2 < lineedContent_.size()) {
+            if(cursor_.getTop() == top + height - 2) {
+                textArea_.moveDown();
+            } else {
+                cursor_.moveDown();
+            }
         } else {
-            cursor_.moveDown();
+            if(cursor_.getTop() < top + lineedContent_.size()) {
+                cursor_.moveDown();
+            }
         }
     }
 
@@ -118,6 +132,26 @@ public:
         } else {
             cursor_.moveRight();
         }
+    }
+
+    void moveViewLeft(int step = 1) {
+        for(int i = 0; i < step; i++)
+        textArea_.moveLeft();
+    }
+
+    void moveViewRight(int step = 1) {
+        for(int i = 0; i < step; i++)
+        textArea_.moveRight();
+    }
+
+    void moveViewUp(int step = 1) {
+        for(int i = 0; i < step; i++)
+        textArea_.moveUp();
+    }
+
+    void moveViewDown(int step = 1) {
+        for(int i = 0; i < step; i++)
+        textArea_.moveDown();
     }
 
     void setFocus(bool focusStatus) {
@@ -240,6 +274,25 @@ public:
                 moveRight();
             }
         }
+    }
+
+    void setSize(int width, int height) {
+        textArea_.setSize(width, height);
+        cursor_.setBounds(left + width - 2, top + height - 2);
+        if(cursor_.getLeft() > width) {
+            moveLeft(cursor_.getLeft() - width);
+        }
+        if(cursor_.getTop() > height) {
+            moveUp(cursor_.getTop() - height);
+        }
+        BaseComponent::setSize(width, height);
+    }
+
+    void setPosition(int newLeft, int newTop) {
+        textArea_.setPosition(newLeft, newTop);
+        cursor_.setPosition(newLeft, newTop);
+        cursor_.setBounds(newLeft + width - 2, newTop + height - 2);
+        BaseComponent::setPosition(newLeft, newTop);
     }
 };
 

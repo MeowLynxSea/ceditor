@@ -82,6 +82,18 @@ public:
     void setTitle(const RichText& newTitle) {
         border_.setTitle(newTitle);
     }
+
+    void setSize(int newWidth, int newHeight) {
+        border_.setSize(newWidth, newHeight);
+        text_.setSize(newWidth - 2, newHeight - 2);
+        BaseComponent::setSize(newWidth, newHeight);
+    }
+
+    void setPosition(int newLeft, int newTop) {
+        border_.setPosition(newLeft, newTop);
+        text_.setPosition(newLeft + 1, newTop + 1);
+        BaseComponent::setPosition(newLeft, newTop);
+    }
 };
 
 #endif

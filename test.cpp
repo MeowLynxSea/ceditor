@@ -3,7 +3,6 @@
 #include "components/Editor.h"
 #include "utils/RichText.h"
 #include "utils/Color.h"
-#include "utils/FocusManager.h"
 
 int consoleWidth, consoleHeight;
 HANDLE hConsole;

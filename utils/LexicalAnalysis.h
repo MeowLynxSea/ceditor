@@ -97,9 +97,16 @@ private:
     int reserveWordCount, operatorAndDelimiterCount;
     int syn = -1;
 
+    std::string strToUpper(std::string str) {
+        for(int i = 0; i < str.size(); i++) {
+            str[i] = toupper(str[i]);
+        }
+        return str;
+    }
+
     int searchReserveWord(std::string word) {
         for(size_t i = 0; i < reserveWord.size(); i++) {
-            if (word == reserveWord[i]) {
+            if (strToUpper(word) == strToUpper(reserveWord[i])) {
                 return i;
             }
         }

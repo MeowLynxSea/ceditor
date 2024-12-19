@@ -34,3 +34,5 @@
 .vscode/*
 task.json
 settings.json
+
+build/*

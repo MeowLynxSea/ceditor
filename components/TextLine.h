@@ -48,6 +48,18 @@ public:
     void onKeyPress(int key) override {
         //不处理按键
     }
+
+    void setSize(int width, int height) {
+        BaseComponent::setSize(width, height);
+        text_.setSize(width - 2, 1);
+        border_.setSize(width, height);
+    }
+
+    void setPosition(int left, int top) {
+        BaseComponent::setPosition(left, top);
+        text_.setPosition(left + 1, top + 1);
+        border_.setPosition(left, top);
+    }
 };
 
 #endif
