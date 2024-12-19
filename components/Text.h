@@ -16,16 +16,6 @@ private:
     int maxLineWidth_ = 0;
 
 public:
-    Text(int left, int top, int width, int height) : BaseComponent(top, left, width, height) {
-        text_ = RichText();
-    }
-    Text(int left, int top, int width, int height, const RichText& text) : BaseComponent(top, left, width, height) {
-        text_ = text;
-    }
-    ~Text() override {
-        lines_.clear();
-    }
-
     void setText(const RichText& text) {
         this->text_ = text;
 
@@ -68,6 +58,20 @@ public:
         // for(int i = 0; i < lines_.size(); i++) {
         //     out << lines_[i].plainText() << std::endl << "-------------------------------------------" << std::endl;
         // }
+    }
+
+    Text() : BaseComponent(0, 0, 0, 0) {
+        setText(RichText());
+    }
+
+    Text(int left, int top, int width, int height) : BaseComponent(left, top, width, height) {
+        setText(RichText());
+    }
+    Text(int left, int top, int width, int height, const RichText& text) : BaseComponent(left, top, width, height) {
+        setText(text);
+    }
+    ~Text() override {
+        lines_.clear();
     }
 
     RichText getText() {

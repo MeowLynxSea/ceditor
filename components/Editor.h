@@ -123,8 +123,6 @@ public:
     void setFocus(bool focusStatus) {
         BaseComponent::setFocus(focusStatus);
         cursor_.setVisibility(focusStatus);
-
-        draw();
     }
 
     void onKeyPress(int key) override {
@@ -242,8 +240,6 @@ public:
                 moveRight();
             }
         }
-
-        draw();
     }
 };
 
