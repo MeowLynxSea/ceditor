@@ -203,10 +203,7 @@ public:
     }
 
     void clear() override {
-        size_ = 0;
-        start_chunk = 0;
-        start_pos = 0;
-        ensure_capacity(0);
+        while(!empty()) pop();
     }
 };
 

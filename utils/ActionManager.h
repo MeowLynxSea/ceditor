@@ -3,6 +3,7 @@
 
 #include "../mystl/my_stack.h"
 #include <string>
+#include <iostream>
 
 enum class EditActiontype {
     Initialize,
@@ -18,9 +19,11 @@ struct EditAction {
 
 class ActionManager {
 private:
-    MyStack<MyVector<EditAction>> undoStack_, redoStack_;
+    MyStack<MyVector<EditAction>> undoStack_;
+    MyStack<MyVector<EditAction>> redoStack_;
     std::string content_;
 
+public:
     MyVector<EditAction> calculateEditActions(const std::string &str1, const std::string &str2) { // 规定Editor只会在删除或者插入时提交，因此只会同时存在一种操作
         int m = str1.length();
         int n = str2.length();
@@ -98,7 +101,6 @@ private:
         return newContent;
     }
 
-public:
     ActionManager() {
     }
     ActionManager(const std::string &content) {
@@ -107,7 +109,7 @@ public:
 
     void updateContent(const std::string &content) {
         redoStack_.clear();
-        MyVector<EditAction> actions = calculateEditActions(content_, content);
+        MyVector<EditAction> actions = calculateEditActions(content, content_);
         content_ = content;
         undoStack_.push(actions);
     }
@@ -119,7 +121,7 @@ public:
         MyVector<EditAction> actions = undoStack_.top();
         undoStack_.pop();
         std::string newContent = applyEditAction(actions, content_);
-        redoStack_.push(calculateEditActions(content_, newContent));
+        redoStack_.push(calculateEditActions(newContent, content_));
         content_ = newContent;
     }
 
@@ -130,11 +132,11 @@ public:
         MyVector<EditAction> actions = redoStack_.top();
         redoStack_.pop();
         std::string newContent = applyEditAction(actions, content_);
-        undoStack_.push(calculateEditActions(content_, newContent));
+        undoStack_.push(calculateEditActions(newContent, content_));
         content_ = newContent;
     }
 
-    void setContent(const std::string &content) {
+    void setOriginContent(std::string content) {
         content_ = content;
         undoStack_.clear();
         redoStack_.clear();
