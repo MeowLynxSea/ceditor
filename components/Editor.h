@@ -160,7 +160,7 @@ public:
             if(key == 8) { // backspace
                 if(inputstatus_ != InputStatus::Delete) {
                     inputstatus_ = InputStatus::Delete;
-                    std::string rst = actionmanager_.updateContent(getContent()) ? "success" : "fail";
+                    // std::string rst = actionmanager_.updateContent(getContent()) ? "success" : "fail";
                     // MessageBoxA(NULL, rst.c_str(), "Update Content", MB_OK);
                 }
                 // 如果是第一个字符，则把当前行内容加到上一行末尾
