@@ -27,6 +27,7 @@ private:
     MyVector<Option> options_;
     int currentIndex_ = 0;
     Rect border_ = {0, 0, 0, 0};
+    void onOptionSelected(const std::string& id);
 
 public:
     Menu(int left, int top, RichText title, MyVector<MenuOption> options) : BaseComponent(left, top, 0, 0) { // set left/top to -1 to center the menu
@@ -95,6 +96,8 @@ public:
         } else if(key == 80 + 256) {
             if(currentIndex_ == options_.size() - 1) return;
             currentIndex_++;
+        } else if(key == 13) { // enter
+            onOptionSelected(options_[currentIndex_].option.id);
         }
 
         for (int i = 0; i < options_.size(); i++) {
