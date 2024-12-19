@@ -4,6 +4,7 @@
 #include "../mystl/my_stack.h"
 #include <string>
 #include <iostream>
+#include <windows.h>
 
 enum class EditActiontype {
     Initialize,
@@ -22,6 +23,18 @@ private:
     MyStack<MyVector<EditAction>> undoStack_;
     MyStack<MyVector<EditAction>> redoStack_;
     std::string content_;
+
+    std::string applyEditAction(MyVector<EditAction> &actions, std::string &content) {
+        std::string newContent = content;
+        for(int i = 0; i < actions.size(); i++) {
+            if(actions[i].type == EditActiontype::Insert) {
+                newContent.insert(actions[i].pos, actions[i].content);
+            } else if(actions[i].type == EditActiontype::Delete) {
+                newContent.erase(actions[i].pos, actions[i].content.size());
+            }
+        }
+        return newContent;
+    }
 
 public:
     MyVector<EditAction> calculateEditActions(const std::string &str1, const std::string &str2) { // 规定Editor只会在删除或者插入时提交，因此只会同时存在一种操作
@@ -89,54 +102,56 @@ public:
         return actions;
     }
 
-    std::string applyEditAction(MyVector<EditAction> &actions, std::string &content) {
-        std::string newContent = content;
-        for(int i = 0; i < actions.size(); i++) {
-            if(actions[i].type == EditActiontype::Insert) {
-                newContent.insert(actions[i].pos, actions[i].content);
-            } else if(actions[i].type == EditActiontype::Delete) {
-                newContent.erase(actions[i].pos, actions[i].content.size());
-            }
-        }
-        return newContent;
-    }
-
     ActionManager() {
     }
-    ActionManager(const std::string &content) {
+    ActionManager(std::string content) {
         content_ = content;
     }
 
-    void updateContent(const std::string &content) {
+    bool updateContent(const std::string content) {
+        // std::string oldContentLength = std::to_string(content_.length());
+        // std::string newContentLength = std::to_string(content.length());
+        // std::string message = "Length of old content is " + oldContentLength + " and new content is " + newContentLength;
+        // MessageBoxA(0, message.c_str(), "Update Content", MB_OK);
+        if(content == content_) {
+            return false;
+        }
         redoStack_.clear();
         MyVector<EditAction> actions = calculateEditActions(content, content_);
         content_ = content;
         undoStack_.push(actions);
+        return true;
     }
 
-    void undo() {
+    bool undo() {
         if (undoStack_.empty()) {
-            return;
+            return false;
         }
         MyVector<EditAction> actions = undoStack_.top();
         undoStack_.pop();
         std::string newContent = applyEditAction(actions, content_);
         redoStack_.push(calculateEditActions(newContent, content_));
         content_ = newContent;
+        return true;
     }
 
-    void redo() {
+    bool redo() {
         if (redoStack_.empty()) {
-            return;
+            return false;
         }
         MyVector<EditAction> actions = redoStack_.top();
         redoStack_.pop();
         std::string newContent = applyEditAction(actions, content_);
         undoStack_.push(calculateEditActions(newContent, content_));
         content_ = newContent;
+        return true;
     }
 
     void setOriginContent(std::string content) {
+        // std::string oldContentLength = std::to_string(content_.length());
+        // std::string newContentLength = std::to_string(content.length());
+        // std::string message = "Length of old content is " + oldContentLength + " and new content is " + newContentLength;
+        // MessageBoxA(0, message.c_str(), "Set Origin Content", MB_OK);
         content_ = content;
         undoStack_.clear();
         redoStack_.clear();

@@ -24,7 +24,7 @@ int main() {
     content = content.substr(0, content.size() - 1); // remove last newline
 
     editor.setRuleName("cpp");
-    editor.setContent(content);
+    editor.setContent(content, true);
 
     editor.draw();
 
@@ -33,8 +33,8 @@ int main() {
             int scan = _getch(), opt;
             if(scan == 224) {
                 opt = _getch() + 256;
-            } else if(scan == 26) {
-                opt = 26 + 512;
+            } else if(scan == 26 || scan == 25) {
+                opt = scan + 512;
             } else {
                 opt = scan;
             }

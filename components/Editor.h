@@ -22,7 +22,8 @@ private:
         Insert,
         Delete,
         Command
-    } inputstatus_ = InputStatus::Insert;
+    };
+    InputStatus inputstatus_;
     static const int MAX_DIVISION_TIME = 1200; // 1.2s
     int lastInputTime_ = 0;
 
@@ -55,18 +56,20 @@ public:
         content_ = "";
         cursor_.setVisibility(false);
         actionmanager_.setOriginContent(content_);
+        inputstatus_ = InputStatus::Insert;
     };
 
     void setRuleName(std::string ruleName) { ruleName_ = ruleName; }
     std::string getRuleName() { return ruleName_; }
 
-    void setContent(std::string content) {
+    void setContent(std::string content, bool firstTime = false) {
         content_ = content;
         coloredContent_ = SyntaxHighlighter(ruleName_).highlight(content_);
         textArea_.setText(coloredContent_);
         lineedContent_ = split(content_);
-        actionmanager_.setOriginContent(content_);
+        if(firstTime) actionmanager_.setOriginContent(content_);
     }
+
     std::string getContent() { return content_; }
 
     void setTitle(std::string title) {
@@ -131,14 +134,20 @@ public:
         int currentChar = cursor_.getLeft() - left - 1 + textArea_.getViewLeft();
         int lineLength = lineedContent_[currentLine].size();
 
-        if(key == 72 + 256) { // up
-            moveUp();
-        } else if(key == 80 + 256) { // down
-            moveDown();
-        } else if(key == 75 + 256) { // left
-            moveLeft();
-        } else if(key == 77 + 256) { // right
-            moveRight();
+        if(key >= 256 && key < 512) {
+            if(inputstatus_ != InputStatus::Command) {
+                inputstatus_ = InputStatus::Command;
+                actionmanager_.updateContent(content_);
+            }
+            if (key == 72 + 256) { // up
+                moveUp();
+            } else if(key == 80 + 256) { // down
+                moveDown();
+            } else if(key == 75 + 256) { // left
+                moveLeft();
+            } else if(key == 77 + 256) { // right
+                moveRight();
+            }
         } else {
             if(key == 224) return;
             if(currentChar > lineLength) {
@@ -151,7 +160,8 @@ public:
             if(key == 8) { // backspace
                 if(inputstatus_ != InputStatus::Delete) {
                     inputstatus_ = InputStatus::Delete;
-                    actionmanager_.updateContent(content_);
+                    std::string rst = actionmanager_.updateContent(getContent()) ? "success" : "fail";
+                    // MessageBoxA(NULL, rst.c_str(), "Update Content", MB_OK);
                 }
                 // 如果是第一个字符，则把当前行内容加到上一行末尾
                 if(currentChar == 0) {

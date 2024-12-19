@@ -6,6 +6,17 @@ using namespace std;
 
 int main() {
     ActionManager am;
+
+    std::string s_ = "hello,world!";
+    am.setOriginContent(s_);
+    s_ = s_.substr(0, 5);
+    printf("%s\n", s_.c_str());
+    printf("%s\n", am.getContent().c_str());
+    am.updateContent(s_);
+    printf("%s\n", am.getContent().c_str());
+    am.undo();
+    printf("%s\n", am.getContent().c_str());
+
     MyVector<EditAction> v;
     std::string s0 = "i can see you, but u dont love me";
     v = am.calculateEditActions("i can see you, but u dont love me", "i cant hug u, but i love you");
