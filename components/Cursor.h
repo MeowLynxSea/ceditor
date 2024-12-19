@@ -90,7 +90,10 @@ public:
 
     void onKeyPress(int key) override { return; }
 
-    void setVisibility(bool visibility) { visibility_ = visibility; }
+    void setVisibility(bool visibility) {
+        if(visibility == visibility_) return;
+        visibility_ = visibility;
+    }
 
     bool isVisible() { return visibility_; }
 };

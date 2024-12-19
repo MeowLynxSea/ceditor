@@ -12,7 +12,7 @@
 class Editor : public BaseComponent {
 private:
     TextArea textArea_ = TextArea(0, 0, 0, 0);
-    Cursor cursor_;
+    Cursor cursor_ = Cursor(0, 0, false);
     std::string content_;
     RichText coloredContent_;
     std::string ruleName_;
@@ -120,6 +120,8 @@ public:
     void setFocus(bool focusStatus) {
         BaseComponent::setFocus(focusStatus);
         cursor_.setVisibility(focusStatus);
+
+        draw();
     }
 
     void onKeyPress(int key) override {
