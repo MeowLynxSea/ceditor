@@ -18,6 +18,13 @@ private:
     std::string ruleName_;
     MyVector<std::string> lineedContent_;
     ActionManager actionmanager_;
+    enum class InputStatus {
+        Insert,
+        Delete,
+        Command
+    } inputstatus_ = InputStatus::Insert;
+    static const int MAX_DIVISION_TIME = 1200; // 1.2s
+    int lastInputTime_ = 0;
 
     MyVector<std::string> split(std::string content) {
         MyVector<std::string> lineedContent;
@@ -47,6 +54,7 @@ public:
         cursor_.setBounds(left + width - 2, top + height - 2);
         content_ = "";
         cursor_.setVisibility(false);
+        actionmanager_.setOriginContent(content_);
     };
 
     void setRuleName(std::string ruleName) { ruleName_ = ruleName; }
@@ -57,6 +65,7 @@ public:
         coloredContent_ = SyntaxHighlighter(ruleName_).highlight(content_);
         textArea_.setText(coloredContent_);
         lineedContent_ = split(content_);
+        actionmanager_.setOriginContent(content_);
     }
     std::string getContent() { return content_; }
 
@@ -138,6 +147,10 @@ public:
             }
 
             if(key == 8) { // backspace
+                if(inputstatus_ != InputStatus::Delete) {
+                    inputstatus_ = InputStatus::Delete;
+                    actionmanager_.updateContent(content_);
+                }
                 // 如果是第一个字符，则把当前行内容加到上一行末尾
                 if(currentChar == 0) {
                     if(currentLine > 0) {
@@ -157,6 +170,10 @@ public:
                     setContent(assemble(lineedContent_));
                 }
             } else if(key == 127 || key == 83 + 256) { // delete
+                if(inputstatus_ != InputStatus::Delete) {
+                    inputstatus_ = InputStatus::Delete;
+                    actionmanager_.updateContent(content_);
+                }
                 if(currentChar == lineLength) {
                     if(currentLine < lineedContent_.size() - 1) {
                         lineedContent_[currentLine] += lineedContent_[currentLine + 1];
@@ -168,14 +185,41 @@ public:
                     lineedContent_[currentLine] = lineedContent_[currentLine].substr(0, currentChar) + lineedContent_[currentLine].substr(currentChar + 1);
                     setContent(assemble(lineedContent_));
                 }
-            } else if(key == 13) { // enter
+            } else if(key == 13) { // enter 
+                if(inputstatus_ != InputStatus::Insert) {
+                    inputstatus_ = InputStatus::Insert;
+                    actionmanager_.updateContent(content_);
+                }
                 lineedContent_[currentLine].insert(currentChar, "\n");
                 setContent(assemble(lineedContent_));
                 moveDown();
                 for(int i = 0; i < currentChar; i++) {
                     moveLeft();
                 }
+            } else if(key >= 512 && key < 768) { // ctrl + 
+                if(inputstatus_ != InputStatus::Command) {
+                    inputstatus_ = InputStatus::Command;
+                    actionmanager_.updateContent(content_);
+                }
+                key -= 512;
+                switch (key) {
+                    case 26: // ctrl + z
+                        actionmanager_.undo();
+                        setContent(actionmanager_.getContent());
+                        break;
+                    case 25: // ctrl + y
+                        actionmanager_.redo();
+                        setContent(actionmanager_.getContent());
+                        break;
+                }
             } else {
+                if(inputstatus_ != InputStatus::Insert) {
+                    inputstatus_ = InputStatus::Insert;
+                    actionmanager_.updateContent(content_);
+                }
+                if(key == 32 || key == 9) { // space
+                    actionmanager_.updateContent(content_);
+                }
                 if(key == 9) { // tab
                     lineedContent_[currentLine].insert(currentChar, "    ");
                     moveRight(3);
@@ -186,6 +230,8 @@ public:
                 moveRight();
             }
         }
+
+        draw();
     }
 };
 

@@ -33,6 +33,8 @@ int main() {
             int scan = _getch(), opt;
             if(scan == 224) {
                 opt = _getch() + 256;
+            } else if(scan == 26) {
+                opt = 26 + 512;
             } else {
                 opt = scan;
             }
@@ -47,7 +49,6 @@ int main() {
                     editor.setFocus(true);
                 }
             }
-            editor.draw();
         }
     }
 
