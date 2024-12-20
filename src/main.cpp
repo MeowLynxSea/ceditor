@@ -45,7 +45,7 @@ int main(int argc, char* argv[]) {
     }
     file.close();
     content = content.substr(0, content.size() - 1); // remove last newline
-    infoBar.setText(RichText("File loaded: " + std::to_string(content.size()) + " characters. Press 'i' to enter insert mode, 'm' for menu.", COLOR_GREEN));
+    infoBar.setText(RichText("File loaded: " + std::to_string(content.size()) + " characters. Press 'i' to enter insert mode.", COLOR_GREEN));
 
     mainEditor.setRuleName(getRuleByFileName(argv[1]));
     mainEditor.setContent(content, true);
@@ -67,9 +67,9 @@ int main(int argc, char* argv[]) {
                 if(opt == 27) {
                     mainEditor.setFocus(false);
                     if(mainEditor.isChanged()) {
-                        infoBar.setText(RichText("[MODIFIED] ", COLOR_YELLOW) + RichText(std::to_string(mainEditor.getContent().size()) + " characters. Press 'i' to enter insert mode, 'm' for menu."));
+                        infoBar.setText(RichText("[MODIFIED] ", COLOR_YELLOW) + RichText(std::to_string(mainEditor.getContent().size()) + " characters. Press 'i' to enter insert mode."));
                     } else {
-                        infoBar.setText(RichText(std::to_string(mainEditor.getContent().size()) + " characters. Press 'i' to enter insert mode, 'm' for menu."));
+                        infoBar.setText(RichText(std::to_string(mainEditor.getContent().size()) + " characters. Press 'i' to enter insert mode."));
                     }
                 } else {
                     mainEditor.onKeyPress(opt);
@@ -91,8 +91,6 @@ int main(int argc, char* argv[]) {
                     mainEditor.moveViewLeft();
                 } else if(opt == 256 + 77) {
                     mainEditor.moveViewRight();
-                } else if(opt == 'm') {
-                    //TODO: menu
                 } else if(opt == 27) {
                     if(mainEditor.isChanged()) {
                         infoBar.setText(RichText("[MODIFIED] ", COLOR_YELLOW) + RichText("Exiting..."));
@@ -128,7 +126,37 @@ int main(int argc, char* argv[]) {
                             infoBar.setText(RichText("Exiting...", COLOR_GREEN));
                             return 0;
                         } else if(menu.getChoice() == "cancel") {
-                            infoBar.setText(RichText("[MODIFIED] ", COLOR_YELLOW) + RichText("Canceled. Press 'i' to enter insert mode, 'm' for menu."));
+                            infoBar.setText(RichText("[MODIFIED] ", COLOR_YELLOW) + RichText("Canceled. Press 'i' to enter insert mode."));
+                        }
+                        infoBar.draw();
+                    } else {
+                        infoBar.setText(RichText("Exiting..."));
+                        infoBar.draw();
+                        MyVector<MenuOption> ops;
+                        ops.push_back(MenuOption("confirm", "Yes"));
+                        ops.push_back(MenuOption("cancel", "Cancel"));
+                        Menu menu = Menu(-1, -1, std::string("Are you sure to exit?"), ops, 1);
+                        menu.draw();
+                        menu.setFocus(true);
+                        while(menu.getChoice() == "") {
+                            if(_kbhit()) {
+                                int scan = _getch(), opt;
+                                if(scan == 224) {
+                                    opt = _getch() + 256;
+                                } else if(scan == 26 || scan == 25) {
+                                    opt = scan + 512;
+                                } else {
+                                    opt = scan;
+                                }
+                                menu.onKeyPress(opt);
+                                menu.draw();
+                            }
+                        }
+                        if(menu.getChoice() == "confirm") {
+                            infoBar.setText(RichText("Exiting...", COLOR_GREEN));
+                            return 0;
+                        } else if(menu.getChoice() == "cancel") {
+                            infoBar.setText(RichText("Canceled. Press 'i' to enter insert mode."));
                         }
                         infoBar.draw();
                     }
