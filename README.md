@@ -23,7 +23,7 @@ cmake -G "Unix Makefiles" -S . -B build
 make -C build
 ```
 
-编译完成后，可执行文件将位于 `bin` 目录下。
+编译完成后，可执行文件将位于 `build` 目录下。
 
 ## 使用
 
