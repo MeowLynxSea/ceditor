@@ -50,6 +50,8 @@ int main(int argc, char* argv[]) {
     mainEditor.setRuleName(getRuleByFileName(argv[1]));
     mainEditor.setContent(content, true);
 
+    mainEditor.setFocus(false);
+
     mainEditor.draw();
     infoBar.draw();
 
