@@ -36,3 +36,5 @@ task.json
 settings.json
 
 build/*
+
+test/googletest-1.15.2/*
